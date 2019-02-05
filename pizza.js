@@ -44,7 +44,7 @@ util.inherits(Pizza, events.EventEmitter);
 Pizza.prototype.bake = function(givenPulse) {
   var time = 500;//temperature * 10;
   var self = this;
-  console.log('Servo pulse at', temperature);
+  
   if(givenPulse < 500) {
     pulseWidth = 500;
   } else if(givenPulse > 2500) {
@@ -52,6 +52,8 @@ Pizza.prototype.bake = function(givenPulse) {
   } else {
     pulseWidth = givenPulse;
   }
+
+  console.log('Servo pulse at', givenPulse);
 
   motor.servoWrite(pulseWidth);
   
