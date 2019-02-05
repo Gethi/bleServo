@@ -45,8 +45,8 @@ Pizza.prototype.bake = function(givenPulse) {
   var time = 500;//temperature * 10;
   var self = this;
   
-  if(givenPulse < 500) {
-    pulseWidth = 500;
+  if(givenPulse < 550) {
+    pulseWidth = 550;
   } else if(givenPulse > 2500) {
     pulseWidth = 2500;
   } else {
