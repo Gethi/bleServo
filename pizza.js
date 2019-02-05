@@ -1,6 +1,12 @@
 var util = require('util');
 var events = require('events');
 
+var Gpio = require('pigpio').Gpio;
+
+var motor = new Gpio(4, {mode: Gpio.OUTPUT});
+
+var pulseWidth = 1500;
+
 var PizzaCrust = {
   NORMAL:    0,
   DEEP_DISH: 1,
@@ -35,17 +41,27 @@ function Pizza() {
 
 util.inherits(Pizza, events.EventEmitter);
 
-Pizza.prototype.bake = function(temperature) {
-  var time = temperature * 10;
+Pizza.prototype.bake = function(givenPulse) {
+  var time = 500;//temperature * 10;
   var self = this;
-  console.log('baking pizza at', temperature, 'degrees for', time, 'milliseconds');
+  console.log('Servo pulse at', temperature);
+  if(givenPulse < 500) {
+    pulseWidth = 500;
+  } else if(givenPulse > 2500) {
+    pulseWidth = 2500;
+  } else {
+    pulseWidth = givenPulse;
+  }
+
+  motor.servoWrite(pulseWidth);
+  
   setTimeout(function() {
-    var result =
-      (temperature < 350) ? PizzaBakeResult.HALF_BAKED:
+    var result = PizzaBakeResult.BAKED;
+      /*(temperature < 350) ? PizzaBakeResult.HALF_BAKED:
       (temperature < 450) ? PizzaBakeResult.BAKED:
       (temperature < 500) ? PizzaBakeResult.CRISPY:
       (temperature < 600) ? PizzaBakeResult.BURNT:
-                            PizzaBakeResult.ON_FIRE;
+                            PizzaBakeResult.ON_FIRE;*/
     self.emit('ready', result);
   }, time);
 };
